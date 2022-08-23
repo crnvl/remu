@@ -14,4 +14,4 @@ A guide on how to contribute will follow soon.
 This project is heavily based on the [NES E-Book](https://bugzmanov.github.io/nes_ebook) by bugzmanov.
 
 ---
-*it's not
+*it's not, but I love theprimeagen
