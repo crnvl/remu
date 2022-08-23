@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use crate::utils::{OpCode, OPCODES_MAP};
+use std::collections::HashMap;
 
 pub struct CPU {
     pub register_a: u8,
@@ -201,7 +201,7 @@ impl CPU {
 
 #[cfg(test)]
 mod test {
-    use crate::cpu::{CPU, Mem};
+    use crate::cpu::{Mem, CPU};
 
     #[test]
     fn test_0xa9_lda_immidiate_load_data() {
