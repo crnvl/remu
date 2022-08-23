@@ -46,4 +46,12 @@ mod test {
         cpu.load_and_run(vec![0xa9, 0xc0, 0xaa, 0xe8, 0x00]);
         assert_eq!(cpu.register_x, 0xc1);
     }
+
+    #[test]
+    fn test_lda_from_memory() {
+        let mut cpu = CPU::new();
+        cpu.mem_write(0x10, 0x55);
+        cpu.load_and_run(vec![0xa5, 0x10, 0x00]);
+        assert_eq!(cpu.register_a, 0x55);
+    }
 }
