@@ -94,6 +94,14 @@ impl CPU {
                     self.program_counter += 2;
                 }
                 0xAA => self.tax(),
+                0x85 => {
+                    self.sta(&AddressingMode::ZeroPage);
+                    self.program_counter += 1;
+                }
+                0x95 => {
+                    self.sta(&AddressingMode::ZeroPage_X);
+                    self.program_counter += 1;
+                }
                 0x00 => return,
                 _ => todo!(""),
             }
@@ -115,6 +123,11 @@ impl CPU {
     fn inx(&mut self) {
         self.register_x = self.register_x.wrapping_add(1);
         self.update_zero_and_negative_flags(self.register_x);
+    }
+
+    fn sta(&mut self, mode: &AddressingMode) {
+        let addr = self.get_operand_address(mode);
+        self.mem_write(addr, self.register_a);
     }
 
     fn update_zero_and_negative_flags(&mut self, result: u8) {
