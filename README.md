@@ -1,5 +1,5 @@
-# remu
 ![Tests](https://github.com/angelsflyinhell/remu/actions/workflows/rust.yml/badge.svg)
+# remu
 A simple NES emulator implemented in Rust.
 
 Status: Work in progress.
