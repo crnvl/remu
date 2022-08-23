@@ -29,7 +29,6 @@ mod test {
         let mut cpu = CPU::new();
         cpu.register_a = 10;
         cpu.interpret(vec![0xAA, 0x00]);
-
         assert_eq!(cpu.register_x, 10);
     }
 }
