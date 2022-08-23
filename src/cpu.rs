@@ -23,6 +23,7 @@ impl CPU {
             self.program_counter += 1;
 
             match opscode {
+                0xE8 => self.inx(),
                 0xA9 => {
                     let param = program[self.program_counter as usize];
                     self.program_counter += 1;
@@ -43,6 +44,11 @@ impl CPU {
 
     fn tax(&mut self) {
         self.register_x = self.register_a;
+        self.update_zero_and_negative_flags(self.register_x);
+    }
+
+    fn inx(&mut self) {
+        self.register_x = self.register_x.wrapping_add(1);
         self.update_zero_and_negative_flags(self.register_x);
     }
 
