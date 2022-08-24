@@ -1,6 +1,19 @@
 use crate::utils::{OpCode, OPCODES_MAP};
 use std::collections::HashMap;
 
+bitflags! {
+    pub struct CpuFlags: u8 {
+        const CARRY = 0b00000001;
+        const Zero = 0b00000010;
+        const INTERRUPT = 0b00000100;
+        const DECIMAL = 0b00001000;
+        const BREAK = 0b00010000;
+        const BREAK2 = 0b00100000;
+        const OVERFLOW = 0b01000000;
+        const NEGATIVE = 0b10000000;
+    }
+}
+
 pub struct CPU {
     pub register_a: u8,
     pub register_x: u8,
