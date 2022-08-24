@@ -1,5 +1,6 @@
 use crate::utils::{OpCode, OPCODES_MAP};
 use std::collections::HashMap;
+use bitflags::bitflags;
 
 bitflags! {
     pub struct CpuFlags: u8 {
