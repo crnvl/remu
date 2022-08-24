@@ -5,7 +5,7 @@ use bitflags::bitflags;
 bitflags! {
     pub struct CpuFlags: u8 {
         const CARRY = 0b00000001;
-        const Zero = 0b00000010;
+        const ZERO = 0b00000010;
         const INTERRUPT = 0b00000100;
         const DECIMAL = 0b00001000;
         const BREAK = 0b00010000;
