@@ -1,4 +1,3 @@
-![Tests](https://github.com/angelsflyinhell/remu/actions/workflows/rust.yml/badge.svg)
 # remu
 A 🔥🚀BLAZINGLY FAST*🔥🚀 NES emulator implemented in Rust.
 
