@@ -1,6 +1,6 @@
 use crate::utils::{OpCode, OPCODES_MAP};
-use std::collections::HashMap;
 use bitflags::bitflags;
+use std::collections::HashMap;
 
 bitflags! {
     pub struct CpuFlags: u8 {
@@ -105,6 +105,37 @@ impl CPU {
         self.program_counter = self.mem_read_u16(0xFFFC);
     }
 
+    fn add_to_register_a(&mut self, data: u8) {
+        let sum = self.register_a as u16
+            + data as u16
+            + (if self.status.contains(CpuFlags::CARRY) {
+                1
+            } else {
+                0
+            } as u16);
+
+        if sum > 0xff {
+            self.status.insert(CpuFlags::CARRY);
+        } else {
+            self.status.remove(CpuFlags::CARRY);
+        }
+
+        let result = sum as u8;
+
+        if (data ^ result) & (result ^ self.register_a) & 0x80 != 0 {
+            self.status.insert(CpuFlags::OVERFLOW);
+        } else {
+            self.status.remove(CpuFlags::OVERFLOW);
+        }
+
+        self.set_register_a(result);
+    }
+
+    fn set_register_a(&mut self, value: u8) {
+        self.register_a = value;
+        self.update_zero_and_negative_flags(self.register_a);
+    }
+
     pub fn run(&mut self) {
         let ref opcodes: HashMap<u8, &'static OpCode> = *OPCODES_MAP;
 
@@ -127,6 +158,11 @@ impl CPU {
                 0xAA => self.tax(),
                 0xe8 => self.inx(),
                 0x00 => return,
+
+                0x69 | 0x65 | 0x75 | 0x6d | 0x7d | 0x79 | 0x61 | 0x71 => {
+                    self.adc(&opcode.mode);
+                }
+
                 _ => todo!(),
             }
 
@@ -156,6 +192,12 @@ impl CPU {
     fn sta(&mut self, mode: &AddressingMode) {
         let addr = self.get_operand_address(mode);
         self.mem_write(addr, self.register_a);
+    }
+
+    fn adc(&mut self, mode: &AddressingMode) {
+        let addr = self.get_operand_address(mode);
+        let value = self.mem_read(addr);
+        self.add_to_register_a(value);
     }
 
     fn update_zero_and_negative_flags(&mut self, result: u8) {
