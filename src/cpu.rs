@@ -1,6 +1,6 @@
 use crate::utils::{OpCode, OPCODES_MAP};
 use bitflags::bitflags;
-use std::{collections::HashMap, ops::Add};
+use std::{collections::HashMap};
 
 bitflags! {
     pub struct CpuFlags: u8 {
@@ -232,9 +232,15 @@ impl CPU {
     // cpu cycle
 
     pub fn run(&mut self) {
+        self.run_with_callback(|_| {});
+    }
+
+    pub fn run_with_callback<F>(&mut self, mut callback: F) where F: FnMut(&mut CPU) {
         let ref opcodes: HashMap<u8, &'static OpCode> = *OPCODES_MAP;
 
         loop {
+            callback(self);
+
             let code = self.mem_read(self.program_counter);
             self.program_counter += 1;
             let program_counter_state = self.program_counter;
