@@ -1,5 +1,6 @@
 pub mod cpu;
 pub mod utils;
+pub mod bus;
 
 #[macro_use]
 extern crate lazy_static;
