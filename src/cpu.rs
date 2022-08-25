@@ -1,6 +1,5 @@
 use crate::{utils::{OpCode, OPCODES_MAP}, bus::Bus};
 use bitflags::bitflags;
-use sdl2::libc::printf;
 use std::collections::HashMap;
 
 bitflags! {
@@ -69,7 +68,7 @@ impl Mem for CPU {
     }
 
     fn mem_write(&mut self, addr: u16, data: u8) {
-        self.mem_write(addr, data);
+        self.bus.mem_write(addr, data);
     }
 
     fn mem_read_u16(&self, pos: u16) -> u16 {
@@ -82,7 +81,7 @@ impl Mem for CPU {
 }
 
 impl CPU {
-    pub fn new() -> Self {
+    pub fn new(bus: Bus) -> Self {
         CPU {
             register_a: 0,
             register_x: 0,
@@ -90,7 +89,7 @@ impl CPU {
             stack_pointer: STACK_RESET,
             program_counter: 0,
             status: CpuFlags::from_bits_truncate(0b100100),
-            bus: Bus::new()
+            bus: bus
         }
     }
 
@@ -240,7 +239,9 @@ impl CPU {
     }
 
     pub fn load(&mut self, program: Vec<u8>) {
-        self.memory[0x0600..(0x0600 + program.len())].copy_from_slice(&program[..]);
+        for i in 0..(program.len() as u16) {
+            self.mem_write(0x0600 + i, program[i as usize]);
+        }
         self.mem_write_u16(0xFFFC, 0x0600);
     }
 
