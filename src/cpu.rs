@@ -1,5 +1,6 @@
 use crate::utils::{OpCode, OPCODES_MAP};
 use bitflags::bitflags;
+use sdl2::libc::printf;
 use std::collections::HashMap;
 
 bitflags! {
@@ -541,6 +542,8 @@ impl CPU {
             let program_counter_state = self.program_counter;
 
             let opcode = opcodes.get(&code).unwrap();
+
+            // print!("{:?}, ", opcode.mnemonic);
 
             match code {
                 0xa9 | 0xa5 | 0xb5 | 0xad | 0xbd | 0xb9 | 0xa1 | 0xb1 => {

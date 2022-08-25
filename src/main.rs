@@ -5,25 +5,36 @@ pub mod utils;
 extern crate lazy_static;
 extern crate bitflags;
 
-use std::{env, time::Duration, thread::sleep};
+use std::{env, thread::sleep, time::Duration};
 
-use cpu::{CPU, Mem};
+use cpu::{Mem, CPU};
 use rand::Rng;
-use sdl2::{pixels::{PixelFormatEnum, Color}, EventPump, event::Event, keyboard::Keycode};
+use sdl2::{
+    event::Event,
+    keyboard::Keycode,
+    pixels::{Color, PixelFormatEnum},
+    EventPump,
+};
 
 fn main() {
     env::set_var("RUST_BACKTRACE", "1");
 
     let sdl_context = sdl2::init().unwrap();
     let video_subsystem = sdl_context.video().unwrap();
-    let window = video_subsystem.window("Snake Test - remu", 32 * 10, 32 * 10).position_centered().build().unwrap();
+    let window = video_subsystem
+        .window("Snake Test - remu", 32 * 20, 32 * 20)
+        .position_centered()
+        .build()
+        .unwrap();
 
     let mut canvas = window.into_canvas().present_vsync().build().unwrap();
     let mut event_pump = sdl_context.event_pump().unwrap();
     canvas.set_scale(10.0, 10.0).unwrap();
 
     let creator = canvas.texture_creator();
-    let mut texture = creator.create_texture_target(PixelFormatEnum::RGB24, 32, 32).unwrap();
+    let mut texture = creator
+        .create_texture_target(PixelFormatEnum::RGB24, 32, 32)
+        .unwrap();
 
     let game_code = vec![
         0x20, 0x06, 0x06, 0x20, 0x38, 0x06, 0x20, 0x0d, 0x06, 0x20, 0x2a, 0x06, 0x60, 0xa9, 0x02,
@@ -66,26 +77,42 @@ fn main() {
             canvas.present();
         }
 
-        sleep(Duration::from_micros(0));	
+        //sleep(Duration::from_micros(0));
     });
 }
 
 fn handle_user_input(cpu: &mut CPU, event_pump: &mut EventPump) {
     for event in event_pump.poll_iter() {
         match event {
-            Event::Quit { .. } | Event::KeyDown { keycode: Some(Keycode::Escape), .. } => {
+            Event::Quit { .. }
+            | Event::KeyDown {
+                keycode: Some(Keycode::Escape),
+                ..
+            } => {
                 std::process::exit(0);
             }
-            Event::KeyDown { keycode: Some(Keycode::W), .. } => {
+            Event::KeyDown {
+                keycode: Some(Keycode::W),
+                ..
+            } => {
                 cpu.mem_write(0xff, 0x77);
             }
-            Event::KeyDown { keycode: Some(Keycode::S), .. } => {
+            Event::KeyDown {
+                keycode: Some(Keycode::S),
+                ..
+            } => {
                 cpu.mem_write(0xff, 0x73);
             }
-            Event::KeyDown { keycode: Some(Keycode::A), .. } => {
+            Event::KeyDown {
+                keycode: Some(Keycode::A),
+                ..
+            } => {
                 cpu.mem_write(0xff, 0x61);
             }
-            Event::KeyDown { keycode: Some(Keycode::D), .. } => {
+            Event::KeyDown {
+                keycode: Some(Keycode::D),
+                ..
+            } => {
                 cpu.mem_write(0xff, 0x64);
             }
             _ => {}
@@ -125,5 +152,3 @@ fn read_screen_state(cpu: &CPU, frame: &mut [u8; 32 * 3 * 32]) -> bool {
     }
     update
 }
-
-
