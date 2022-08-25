@@ -66,7 +66,7 @@ fn main() {
             canvas.present();
         }
 
-        sleep(Duration::from_micros(0));
+        sleep(Duration::from_micros(0));	
     });
 }
 

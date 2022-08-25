@@ -10,3 +10,8 @@ bitflags = "1.3.2"
 lazy_static = "1.4.0"
 rand = "0.8.5"
 sdl2 = "0.35.2"
+
+[profile.release]
+overflow-checks = true
+panic = "abort"
+opt-level = 3

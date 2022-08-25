@@ -542,8 +542,6 @@ impl CPU {
 
             let opcode = opcodes.get(&code).unwrap();
 
-            println!("{:?} at 0x{:?}", opcode.mnemonic, self.program_counter);
-
             match code {
                 0xa9 | 0xa5 | 0xb5 | 0xad | 0xbd | 0xb9 | 0xa1 | 0xb1 => {
                     self.lda(&opcode.mode);
