@@ -2,6 +2,8 @@ pub mod cpu;
 pub mod utils;
 pub mod bus;
 pub mod cartridge;
+pub mod ppu;
+pub mod registers;
 
 #[macro_use]
 extern crate lazy_static;
@@ -40,7 +42,7 @@ fn main() {
         .create_texture_target(PixelFormatEnum::RGB24, 32, 32)
         .unwrap();
 
-    let game_code: Vec<u8> = std::fs::read("Y:/Development/remu/src/snake.nes").unwrap();
+    let game_code: Vec<u8> = std::fs::read("Y:/Development/remu/src/roms/snake.nes").unwrap();
 
     let rom = Rom::new(&game_code).unwrap();
     let bus = Bus::new(rom);
@@ -118,7 +120,7 @@ fn color(byte: u8) -> Color {
     }
 }
 
-fn read_screen_state(cpu: &CPU, frame: &mut [u8; 32 * 3 * 32]) -> bool {
+fn read_screen_state(cpu: &mut CPU, frame: &mut [u8; 32 * 3 * 32]) -> bool {
     let mut frame_idx = 0;
     let mut update = false;
 
